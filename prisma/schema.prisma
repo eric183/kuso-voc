@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// datasource db {
+//   provider = "mysql"
+//   url      = env("DATABASE_URL")
+//   referentialIntegrity = "prisma"
+// }
+
+// generator client {
+//   provider = "prisma-client-js"
+//   previewFeatures = ["referentialIntegrity"]
+// }
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// model Star {
+//   id              Int       @default(autoincrement()) @id
+//   createdAt       DateTime  @default(now())
+//   updatedAt       DateTime  @updatedAt
+//   name            String    @db.VarChar(255)
+//   constellation   String    @db.VarChar(255)
+// }
+
+model User {
+  id              Int       @default(autoincrement()) @id
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  name            String
+  email           String  @unique
+  isAdmin         Boolean @default(false)
+  isActive        Boolean @default(true)
+  isDeleted       Boolean @default(false)
+}
+
+// model User {
+//   id          String @id @default(cuid())
+//   name        String
+//   email       String
+//   password    String
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @default(now())
+// }
+
+
