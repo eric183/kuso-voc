@@ -1,8 +1,12 @@
+import { User } from "@prisma/client";
 import { prismaClient } from "../../../server/prisma";
 
-export default async function assetHandler(req, res) {
+export default async function assetHandler(
+  req: { method: any },
+  res: { json: (arg0: User[]) => any }
+) {
   const { method } = req;
-  const data = await prismaClient.userList.findMany({
+  const data = await prismaClient.user.findMany({
     where: {
       email: {
         endsWith: "gmail.com",

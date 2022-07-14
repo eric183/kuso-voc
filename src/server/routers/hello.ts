@@ -5,7 +5,7 @@
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { createRouter } from "~/server/createRouter";
-import { prisma } from "~/server/prisma";
+import { prismaClient } from "~/server/prisma";
 
 /**
  * Default selector for comment.

@@ -7,8 +7,8 @@ import { Prisma } from "@prisma/client";
 const defaultCommentSelect = Prisma.validator<Prisma.UserSelect>()({
   name: true,
   email: true,
-  isAdmin: true,
-  isActive: true,
+  // isAdmin: true,
+  // isActive: true,
   // words: true,
 });
 

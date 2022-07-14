@@ -34,7 +34,7 @@ export default async function assetHandler(
       translations: any;
     };
   },
-  res
+  res: { json: (arg0: { content?: string; name?: string }) => any }
 ) {
   await runMiddleware(req, res, cors);
 

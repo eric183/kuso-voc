@@ -2,8 +2,8 @@
  * This file contains the root router of your tRPC-backend
  */
 import { createRouter } from "../createRouter";
-import { postRouter } from "./post";
-import { commentRouter } from "./comment";
+// import { postRouter } from "./post";
+// import { commentRouter } from "./comment";
 import superjson from "superjson";
 import { helloRouter } from "./hello";
 import { userInfo } from "os";

@@ -16,15 +16,15 @@ import { prismaClient } from "~/server/prisma";
 const defaultCommentSelect = Prisma.validator<Prisma.UserSelect>()({
   name: true,
   email: true,
-  isAdmin: true,
-  isActive: true,
+  // isAdmin: true,
+  // isActive: true,
   // words: true,
 });
 
 export const wordCardRouter = createRouter().query("allVoc", {
   input: z
     .object({
-      userId: z.number(),
+      userId: z.string(),
     })
     .nullish(),
   async resolve({ input }) {
