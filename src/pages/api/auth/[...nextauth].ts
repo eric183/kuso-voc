@@ -122,24 +122,27 @@ export default NextAuth({
       if (account) {
         token.accessToken = account.access_token;
 
-        await prismaClient.user.update({
-          where: {
-            id: user?.id,
-          },
-          data: {
-            sessions: {
-              connectOrCreate: {
-                where: {
-                  userId: user?.id,
-                },
-                create: {
-                  sessionToken: token.accessToken as string,
-                  expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        if (token.accessToken) {
+          console.log(token, "........++");
+          await prismaClient.user.update({
+            where: {
+              id: user?.id,
+            },
+            data: {
+              sessions: {
+                connectOrCreate: {
+                  where: {
+                    userId: user?.id,
+                  },
+                  create: {
+                    sessionToken: token.accessToken as string,
+                    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+                  },
                 },
               },
             },
-          },
-        });
+          });
+        }
       }
 
       return token;
