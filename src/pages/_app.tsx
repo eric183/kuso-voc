@@ -10,6 +10,23 @@ import { DefaultLayout } from "~/components/DefaultLayout";
 import { AppRouter } from "~/server/routers/_app";
 import { SSRContext } from "~/utils/trpc";
 import "../../styles/globals.css";
+import { SessionProvider } from "next-auth/react";
+
+// import { create } from "ipfs-http-client";
+
+// connect to the default API address http://localhost:5001
+// const client = ();
+//
+
+// const client = create({ url: "http://127.0.0.1:8080" });
+
+// client.add("good job");
+// .then((data) => {
+//   console.log(data);
+// });
+
+// client.add();
+// console.log(client);
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -18,11 +35,18 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
+const MyApp = (({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppPropsWithLayout) => {
   const getLayout =
     Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
 
-  return getLayout(<Component {...pageProps} />);
+  return getLayout(
+    <SessionProvider session={session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+  );
 }) as AppType;
 
 function getBaseUrl() {

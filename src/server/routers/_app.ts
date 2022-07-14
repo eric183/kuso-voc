@@ -7,7 +7,9 @@ import { commentRouter } from "./comment";
 import superjson from "superjson";
 import { helloRouter } from "./hello";
 import { userInfo } from "os";
-import { userInfoRouter } from "./userInfo";
+// import { userInfoRouter } from "./userInfo";
+import { wordCardRouter } from "./wordCard";
+import { userRouter } from "./user";
 
 /**
  * Create your application's root router
@@ -37,9 +39,11 @@ export const appRouter = createRouter()
   /**
    * Merge `postRouter` under `post.`
    */
-  .merge("post.", postRouter)
-  .merge("hello.", helloRouter)
-  .merge("userInfo.", userInfoRouter)
-  .merge("comment.", commentRouter);
+  // .merge("post.", postRouter)
+  // .merge("hello.", helloRouter)
+  .merge("user.", userRouter)
+  // .merge("wordCard.", wordCardRouter)
+  .merge("wordCard.", wordCardRouter);
+// .merge("comment.", commentRouter);
 
 export type AppRouter = typeof appRouter;
