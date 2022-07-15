@@ -1,4 +1,5 @@
 // import { WordCard } from "@prisma/client";
+import { WordData, User } from "@prisma/client";
 import Cors from "cors";
 import { connect } from "http2";
 
@@ -34,7 +35,7 @@ export default async function assetHandler(
       translations: any;
     };
   },
-  res: { json: (arg0: { content?: string; name?: string }) => any }
+  res: { json: (arg0: { content?: string; data?: [WordData, User] }) => any }
 ) {
   await runMiddleware(req, res, cors);
 
@@ -48,7 +49,7 @@ export default async function assetHandler(
     return res.json({ content: "请联系 eric183 获取权限" });
   }
 
-  prismaClient.$transaction([
+  const data = await prismaClient.$transaction([
     prismaClient.wordData.upsert({
       where: {
         searchingWord: req.body.searchingWord,
@@ -79,5 +80,5 @@ export default async function assetHandler(
     }),
   ]);
 
-  return res.json({ name: "nice" });
+  return res.json({ data });
 }
