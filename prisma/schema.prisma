@@ -63,6 +63,7 @@ model VerificationToken {
 model Word {
   id        String    @id @default(cuid())
   score     Int       @default(0)
+  master    Boolean   @default(false)
   wordData  WordData? @relation(fields: [word], references: [searchingWord])
   word      String    @unique
   user      User?     @relation(fields: [userId], references: [id])

@@ -21,27 +21,63 @@ const defaultCommentSelect = Prisma.validator<Prisma.UserSelect>()({
   // words: true,
 });
 
-export const wordCardRouter = createRouter().query("allVoc", {
-  input: z
-    .object({
-      userId: z.string(),
-    })
-    .nullish(),
-  async resolve({ input }) {
-    return await prismaClient.user
-      .findUnique({
+export const wordCardRouter = createRouter()
+  .mutation("updateMaster", {
+    input: z.object({
+      id: z.string(),
+      email: z.string(),
+      master: z.boolean(),
+    }),
+    async resolve({ input }) {
+      const word = await prismaClient.user.update({
         where: {
-          id: input?.userId,
+          email: input.email,
         },
-        // select: defaultCommentSelect,
-      })
-      .words({
-        select: {
-          wordData: true,
+        data: {
+          words: {
+            update: {
+              where: {
+                id: input.id,
+              },
+              data: {
+                master: input.master,
+              },
+            },
+          },
         },
       });
-  },
-});
+      // const word = await prismaClient.word.update({
+      //   where: { id },
+      //   data: { master },
+      // });
+      return word;
+    },
+  })
+  .query("allVoc", {
+    input: z
+      .object({
+        email: z.string(),
+      })
+      .nullish(),
+    async resolve({ input }) {
+      return await prismaClient.user
+        .findUnique({
+          where: {
+            email: input?.email,
+          },
+          // select: defaultCommentSelect,
+        })
+        .words({
+          select: {
+            id: true,
+            score: true,
+            master: true,
+            wordData: true,
+            // createdAt: true,
+          },
+        });
+    },
+  });
 
 // .mutation("add", {
 //   input: z.object({

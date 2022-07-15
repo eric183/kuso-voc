@@ -13,10 +13,10 @@ export default NextAuth({
   adapter: PrismaAdapter(prismaClient),
   secret: "supersecret",
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
+    // GithubProvider({
+    //   clientId: process.env.GITHUB_ID,
+    //   clientSecret: process.env.GITHUB_SECRET,
+    // }),
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
       name: "Credentials",
@@ -108,6 +108,11 @@ export default NextAuth({
       return true;
     },
     async redirect({ url, baseUrl }) {
+      // console.log(url);
+
+      // if (new URL(url).origin === baseUrl) {
+      //   baseUrl += "/kanban";
+      // }
       return baseUrl;
     },
     async session({ session, token, user }) {

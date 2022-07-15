@@ -11,6 +11,7 @@ import { AppRouter } from "~/server/routers/_app";
 import { SSRContext } from "~/utils/trpc";
 import "../../styles/globals.css";
 import { SessionProvider } from "next-auth/react";
+import { ChakraProvider } from "@chakra-ui/react";
 
 // import { create } from "ipfs-http-client";
 
@@ -43,9 +44,11 @@ const MyApp = (({
     Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
 
   return getLayout(
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
+    <ChakraProvider>
+      <SessionProvider session={session}>
+        <Component {...pageProps} />
+      </SessionProvider>
+    </ChakraProvider>
   );
 }) as AppType;
 
