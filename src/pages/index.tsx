@@ -7,11 +7,16 @@ import { NextPage } from "next";
 import { trpc } from "~/utils/trpc";
 import { DefaultLayout } from "~/components/DefaultLayout";
 import { useSession, signOut, signIn } from "next-auth/react";
+import { useEffect } from "react";
 // import "../../styles/globals.css";
 
 const Home: NextPage = () => {
   const { data } = useSession();
-  console.log(data);
+  // console.log(data);
+
+  useEffect(() => {
+    console.log("inited");
+  }, []);
   // const hello = trpc.useQuery(["hello.all"]);
   // const userInfo = trpc.useQuery([
   //   "userInfo.get",
