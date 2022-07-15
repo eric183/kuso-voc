@@ -45,7 +45,6 @@ import styled from "@emotion/styled";
 import { WordData } from "@prisma/client";
 import { useRouter } from "next/router";
 
-
 interface StateInterface {
   noob?: {
     wordData: WordData | null;
