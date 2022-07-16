@@ -44,6 +44,10 @@ export default NextAuth({
           },
         });
         console.log(foundUser, "foundUser");
+
+        if (!foundUser) {
+          return;
+        }
         if (!foundUser) {
           foundUser = await prismaClient.user.create({
             data: {

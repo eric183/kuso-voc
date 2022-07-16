@@ -1,6 +1,9 @@
+// import { Alert, AlertIcon } from "@chakra-ui/react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getCsrfToken, getProviders, signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { Button } from "~/components/Button";
 import styles from "../../../styles/Signin.module.css";
 
 interface Credentials {
@@ -21,8 +24,36 @@ export default function SignIn({
   [key: string]: any;
 }) {
   const [email, setEmail] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+  const goSignIn = async (providers: { credentials: Credentials }) => {
+    setLoading(true);
+    if (!email.trim()) {
+      alert("Email is required");
+
+      setLoading(false);
+      return;
+    }
+    const signInfo = await signIn(providers.credentials.id, {
+      email,
+      redirect: false,
+    });
+    setLoading(false);
+
+    if (signInfo?.error) {
+      alert(signInfo?.error);
+      return;
+    }
+
+    router.replace("/kanban");
+  };
+
   return (
     <div style={{ overflow: "hidden", position: "relative" }}>
+      {/* <Alert status="info" className="z-50">
+        <AlertIcon />
+        Chakra is going live on August 30th. Get ready!
+      </Alert> */}
       {/* <Header /> */}
       <div className={styles.wrapper + " bg-slate-400"} />
       <div className={styles.content}>
@@ -38,7 +69,7 @@ export default function SignIn({
             className={styles.cardContent}
             onSubmit={(evt) => {
               evt.preventDefault();
-              signIn(providers.credentials.id, { email });
+              goSignIn(providers);
             }}
           >
             <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
@@ -52,19 +83,16 @@ export default function SignIn({
               }}
               onKeyDown={(evt) => {
                 if (evt.key === "Enter") {
-                  signIn(providers.credentials.id, { email });
+                  goSignIn(providers);
+
+                  // signIn(providers.credentials.id, { email });
                 }
               }}
             />
-            <button
-              className={styles.primaryBtn}
-              type="submit"
-              onClick={() => {
-                signIn(providers.credentials.id, { email });
-              }}
-            >
+
+            <Button type="submit" loading={loading}>
               登录
-            </button>
+            </Button>
             <hr />
             {/* {providers &&
               Object.values(providers).map((provider) => (
