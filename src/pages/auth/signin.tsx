@@ -1,7 +1,7 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getCsrfToken, getProviders, signIn } from "next-auth/react";
 import { useState } from "react";
-import styles from "./Signin.module.css";
+import styles from "../../../styles/Signin.module.css";
 
 interface Credentials {
   id: string;
