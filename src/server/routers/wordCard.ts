@@ -76,6 +76,11 @@ export const wordCardRouter = createRouter()
             // createdAt: true,
           },
         });
+      // .words({
+      //   select: {
+      //     id: true,
+      //   },
+      // });
     },
   });
 

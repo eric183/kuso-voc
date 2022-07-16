@@ -9,6 +9,7 @@ import { DefaultLayout } from "~/components/DefaultLayout";
 import { useSession, signOut, signIn } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { motion } from "framer-motion";
 // import "../../styles/globals.css";
 
 const Home: NextPage = () => {
@@ -51,6 +52,7 @@ const Home: NextPage = () => {
         <div className="flex justify-center items-center w-96 h-96 m-auto rounded-2xl">
           <div className="flex flex-col items-center justify-center text-2xl">
             <button onClick={() => signIn()}>登录</button>
+            {/* <motion.img className="w-8/12" src="/dragon.png"></motion.img> */}
           </div>
         </div>
       </main>

@@ -19,41 +19,50 @@ import {
 } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import {
-  Button,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverFooter,
-  PopoverHeader,
-  PopoverTrigger,
-  Portal,
-  Spinner,
-} from "@chakra-ui/react";
-import {
-  DragDropContext,
-  Draggable,
-  DraggableLocation,
-  DraggingStyle,
-  Droppable,
-  NotDraggingStyle,
-} from "react-beautiful-dnd";
-import { FixedSizeList, areEqual } from "react-window";
+import { Spinner, Tooltip } from "@chakra-ui/react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "@emotion/styled";
-import { WordData } from "@prisma/client";
+import { Prisma, WordData } from "@prisma/client";
 import { useRouter } from "next/router";
+
+interface TranslationDataInterface {
+  data: {
+    id: string;
+    score: number;
+    master: boolean;
+    wordData: KanbanPageProps;
+  }[];
+  status: "error" | "idle" | "loading" | "success";
+}
+
+type KanbanPageProps = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  searchingWord: string;
+  searchingEngine: string;
+  translations: {
+    pos: string;
+    terms: {
+      name: string;
+    }[];
+    entries: {
+      word: string;
+      score: number;
+      reverse_translations: { name: string }[];
+    }[];
+  }[];
+};
 
 interface StateInterface {
   noob?: {
-    wordData: WordData | null;
+    wordData: KanbanPageProps;
     id: string;
     score: number;
     master: boolean;
   }[];
   master?: {
-    wordData: WordData | null;
+    wordData: KanbanPageProps;
     id: string;
     score: number;
     master: boolean;
@@ -85,7 +94,7 @@ const Home: NextPage = () => {
                 // router.replace("/");
               }}
               className="inline-block h-10 w-10 rounded-full ring-2 ring-white col-start-12 m-auto"
-              src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              src="https://ipfs.io/ipfs/QmZsKMi9GQ9SeGk5Y7cMcPqayzGa8YVbjTKCdtUYFJYijD?filename=%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20220716225716.jpg"
             />
           )}
         </header>
@@ -137,7 +146,8 @@ const ContentComponent: FC<{
     {
       email: sessionInfo.data.user.email as string,
     },
-  ]);
+  ]) as TranslationDataInterface;
+  console.log(data);
 
   const updateMaster = trpc.useMutation(["wordCard.updateMaster"], {
     async onSuccess() {
@@ -197,7 +207,6 @@ const ContentComponent: FC<{
       });
     }
   }, [data, status]);
-
   return (
     <article className="h-full w-full flex flex-row justify-between items-center px-9 flex-1 mb-4">
       {status === "success" ? (
@@ -274,7 +283,15 @@ const ContentComponent: FC<{
                           ...draggableProps.style,
                         }}
                       >
-                        {column.wordData?.searchingWord}
+                        <Tooltip
+                          bg="#ff4154"
+                          label={column.wordData.translations.map((item) =>
+                            item.terms.map((term) => term.name + "; ")
+                          )}
+                          aria-label="A tooltip"
+                        >
+                          <span>{column.wordData.searchingWord}</span>
+                        </Tooltip>
                       </DropContent>
                     )}
                   </Draggable>
@@ -320,7 +337,16 @@ const ContentComponent: FC<{
                           ...draggableProps.style,
                         }}
                       >
-                        {column.wordData?.searchingWord}
+                        <Tooltip
+                          hasArrow
+                          bg="#ff4154"
+                          label={column.wordData.translations.map((item) =>
+                            item.terms.map((term) => term.name + "; ")
+                          )}
+                          aria-label="A tooltip"
+                        >
+                          <span>{column.wordData.searchingWord}</span>
+                        </Tooltip>
                       </DropContent>
                     )}
                   </Draggable>
