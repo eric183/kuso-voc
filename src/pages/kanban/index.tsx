@@ -2,28 +2,15 @@
 // import Image from "next/image";
 // import styles from "../styles/Home.module.css";
 
-import Head from "next/head";
 import { NextPage } from "next";
 import { trpc } from "~/utils/trpc";
 import { DefaultLayout } from "~/components/DefaultLayout";
 import { useSession, signIn, signOut } from "next-auth/react";
-import {
-  CSSProperties,
-  FC,
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import Image from "next/image";
+import { FC, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Spinner, Tooltip } from "@chakra-ui/react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "@emotion/styled";
-import { Prisma, WordData } from "@prisma/client";
-import { useRouter } from "next/router";
 
 interface TranslationDataInterface {
   data: {
@@ -71,7 +58,6 @@ interface StateInterface {
 
 const Home: NextPage = () => {
   const sessionInfo = useSession();
-  const router = useRouter();
   useEffect(() => {
     console.log("useEffect");
   }, []);
@@ -127,11 +113,11 @@ const DropLayout = styled.section<{
 
 const DropContent = styled.div``;
 
-const getInitialData = (count: number) =>
-  Array.from({ length: count }, (v, k) => k).map((k) => ({
-    id: `item-${k}`,
-    content: `item ${k}`,
-  }));
+// const getInitialData = (count: number) =>
+//   Array.from({ length: count }, (v, k) => k).map((k) => ({
+//     id: `item-${k}`,
+//     content: `item ${k}`,
+//   }));
 
 const ContentComponent: FC<{
   sessionInfo: {
@@ -139,7 +125,7 @@ const ContentComponent: FC<{
     status: any;
   };
 }> = ({ sessionInfo }) => {
-  const utils = trpc.useContext();
+  // const utils = trpc.useContext();
 
   const { data, status } = trpc.useQuery([
     "wordCard.allVoc",
@@ -252,7 +238,7 @@ const ContentComponent: FC<{
             direction="horizontal"
             // type="column"
           >
-            {({ innerRef, droppableProps, placeholder }, snapshot) => (
+            {({ innerRef, droppableProps, placeholder }, _snapshot) => (
               <DropLayout
                 ref={innerRef}
                 isDraggingOver
@@ -306,7 +292,7 @@ const ContentComponent: FC<{
             direction="horizontal"
             // type="column"
           >
-            {({ innerRef, droppableProps, placeholder }, snapshot) => (
+            {({ innerRef, droppableProps, placeholder }, _snapshot) => (
               <DropLayout
                 ref={innerRef}
                 isDraggingOver

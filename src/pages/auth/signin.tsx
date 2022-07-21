@@ -1,5 +1,5 @@
 // import { Alert, AlertIcon } from "@chakra-ui/react";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetServerSideProps } from "next";
 import { getCsrfToken, getProviders, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
