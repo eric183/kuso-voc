@@ -35,7 +35,7 @@ export default async function assetHandler(
       translations: any;
     };
   },
-  res: { json: (arg0: { content?: string; data?: [WordData, User] }) => any }
+  res: { json: (arg0: { content?: string; data?: User }) => any }
 ) {
   await runMiddleware(req, res, cors);
 
@@ -49,36 +49,65 @@ export default async function assetHandler(
     return res.json({ content: "请联系 eric183 获取权限" });
   }
 
-  const data = await prismaClient.$transaction([
-    prismaClient.wordData.upsert({
-      where: {
-        searchingWord: req.body.searchingWord,
-      },
-      update: {},
-      create: {
-        searchingWord: req.body.searchingWord,
-        searchingEngine: req.body.searchingEngine,
-        translations: req.body.translations,
-      },
-    }),
-    prismaClient.user.update({
-      where: {
-        email: req.body.email,
-      },
-      data: {
-        words: {
-          connectOrCreate: {
-            where: {
-              word: req.body.searchingWord,
-            },
-            create: {
-              word: req.body.searchingWord,
-            },
+  await prismaClient.wordData.upsert({
+    where: {
+      searchingWord: req.body.searchingWord,
+    },
+    update: {},
+    create: {
+      searchingWord: req.body.searchingWord,
+      searchingEngine: req.body.searchingEngine,
+      translations: req.body.translations,
+    },
+  });
+
+  const data = await prismaClient.user.update({
+    where: {
+      email: req.body.email,
+    },
+    data: {
+      words: {
+        connectOrCreate: {
+          where: {
+            word: req.body.searchingWord,
+          },
+          create: {
+            word: req.body.searchingWord,
           },
         },
       },
-    }),
-  ]);
+    },
+  });
+  // const data = await prismaClient.$transaction([
+  //   prismaClient.wordData.upsert({
+  //     where: {
+  //       searchingWord: req.body.searchingWord,
+  //     },
+  //     update: {},
+  //     create: {
+  //       searchingWord: req.body.searchingWord,
+  //       searchingEngine: req.body.searchingEngine,
+  //       translations: req.body.translations,
+  //     },
+  //   }),
+  //   prismaClient.user.update({
+  //     where: {
+  //       email: req.body.email,
+  //     },
+  //     data: {
+  //       words: {
+  //         connectOrCreate: {
+  //           where: {
+  //             word: req.body.searchingWord,
+  //           },
+  //           create: {
+  //             word: req.body.searchingWord,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   }),
+  // ]);
 
   return res.json({ data });
 }
