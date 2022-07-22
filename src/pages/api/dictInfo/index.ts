@@ -1,10 +1,7 @@
-// import { WordCard } from "@prisma/client";
-import { WordData, User } from "@prisma/client";
+import { WordData } from "@prisma/client";
 import Cors from "cors";
-import { connect } from "http2";
 
 import { prismaClient } from "~/server/prisma";
-import { trpc } from "~/utils/trpc";
 
 const cors = Cors({
   methods: ["POST", "HEAD"],
@@ -35,7 +32,7 @@ export default async function assetHandler(
       translations: any;
     };
   },
-  res: { json: (arg0: { content?: string; data?: User }) => any }
+  res: { json: (arg0: { content?: string; data?: WordData }) => any }
 ) {
   await runMiddleware(req, res, cors);
 
@@ -49,65 +46,44 @@ export default async function assetHandler(
     return res.json({ content: "请联系 eric183 获取权限" });
   }
 
-  await prismaClient.wordData.upsert({
+  const data = await prismaClient.wordData.upsert({
     where: {
       searchingWord: req.body.searchingWord,
     },
-    update: {},
+    update: {
+      userWords: {
+        connectOrCreate: {
+          where: {
+            word_usermail: {
+              usermail: req.body.email,
+              word: req.body.searchingWord,
+            },
+          },
+          create: {
+            usermail: req.body.email,
+          },
+        },
+      },
+    },
     create: {
       searchingWord: req.body.searchingWord,
       searchingEngine: req.body.searchingEngine,
       translations: req.body.translations,
-    },
-  });
-
-  const data = await prismaClient.user.update({
-    where: {
-      email: req.body.email,
-    },
-    data: {
-      words: {
+      userWords: {
         connectOrCreate: {
           where: {
-            word: req.body.searchingWord,
+            word_usermail: {
+              usermail: req.body.email,
+              word: req.body.searchingWord,
+            },
           },
           create: {
-            word: req.body.searchingWord,
+            usermail: req.body.email,
           },
         },
       },
     },
   });
-  // const data = await prismaClient.$transaction([
-  //   prismaClient.wordData.upsert({
-  //     where: {
-  //       searchingWord: req.body.searchingWord,
-  //     },
-  //     update: {},
-  //     create: {
-  //       searchingWord: req.body.searchingWord,
-  //       searchingEngine: req.body.searchingEngine,
-  //       translations: req.body.translations,
-  //     },
-  //   }),
-  //   prismaClient.user.update({
-  //     where: {
-  //       email: req.body.email,
-  //     },
-  //     data: {
-  //       words: {
-  //         connectOrCreate: {
-  //           where: {
-  //             word: req.body.searchingWord,
-  //           },
-  //           create: {
-  //             word: req.body.searchingWord,
-  //           },
-  //         },
-  //       },
-  //     },
-  //   }),
-  // ]);
 
   return res.json({ data });
 }

@@ -1,10 +1,7 @@
 import NextAuth from "next-auth";
-import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prismaClient } from "~/server/prisma";
-import { GetSessionParams } from "next-auth/react";
-import { PrismaClient, User } from "@prisma/client";
 import { randomUUID } from "crypto";
 
 console.log(process.env.GITHUB_ID);
@@ -32,7 +29,7 @@ export default NextAuth({
           | string;
         sessionToken = sessionToken ? sessionToken[1] : "";
 
-        const { email, password } = credentials as {
+        const { email } = credentials as {
           email: string;
           password: string;
         };
@@ -45,9 +42,9 @@ export default NextAuth({
         });
         console.log(foundUser, "foundUser");
 
-        if (!foundUser) {
-          return null;
-        }
+        // if (!foundUser) {
+        //   return null;
+        // }
 
         if (!foundUser) {
           foundUser = await prismaClient.user.create({
@@ -110,10 +107,10 @@ export default NextAuth({
     strategy: "jwt",
   },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn() {
       return true;
     },
-    async redirect({ url, baseUrl }) {
+    async redirect({ baseUrl }) {
       // console.log(url);
 
       // if (new URL(url).origin === baseUrl) {
@@ -121,12 +118,12 @@ export default NextAuth({
       // }
       return baseUrl;
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       session.accessToken = token.accessToken;
       // console.log(session, "session....");
       return session;
     },
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token, user, account }) {
       // console.log(user, "user ...");
       // console.log(account, "account....");
 

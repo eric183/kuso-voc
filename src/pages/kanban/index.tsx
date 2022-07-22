@@ -133,7 +133,7 @@ const ContentComponent: FC<{
       email: sessionInfo.data.user.email as string,
     },
   ]) as TranslationDataInterface;
-  console.log(data);
+  console.log(data, "dddddddd");
 
   const updateMaster = trpc.useMutation(["wordCard.updateMaster"], {
     async onSuccess() {

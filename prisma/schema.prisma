@@ -65,11 +65,14 @@ model Word {
   score     Int       @default(0)
   master    Boolean   @default(false)
   wordData  WordData? @relation(fields: [word], references: [searchingWord])
-  word      String    @unique
-  user      User?     @relation(fields: [userId], references: [id])
-  userId    String?
+  word      String?    
+  // user      User[]
+  user      User?     @relation(fields: [usermail], references: [email])
+  // usermail  String?   @unique
+  usermail  String?   
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  @@unique([word, usermail])
 }
 
 model WordData {

@@ -60,6 +60,7 @@ export const wordCardRouter = createRouter()
       })
       .nullish(),
     async resolve({ input }) {
+      console.log(input, "ddddddaaaaa");
       return await prismaClient.user
         .findUnique({
           where: {
