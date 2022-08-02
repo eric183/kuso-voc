@@ -47,6 +47,7 @@ export default async function assetHandler(
     return res.json({ content: "请联系 eric183 获取权限" });
   }
 
+  console.log(req.body, "req.body");
   const data = await prismaClient.wordData.upsert({
     where: {
       searchingWord: req.body.searchingWord,
