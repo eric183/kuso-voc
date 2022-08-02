@@ -30,6 +30,7 @@ export default async function assetHandler(
       searchingWord: string;
       searchingEngine: string;
       translations: any;
+      sentences: any;
     };
   },
   res: { json: (arg0: { content?: string; data?: WordData }) => any }
@@ -68,7 +69,9 @@ export default async function assetHandler(
     create: {
       searchingWord: req.body.searchingWord,
       searchingEngine: req.body.searchingEngine,
-      translations: req.body.translations,
+      translations: req.body.translations
+        ? req.body.translations
+        : req.body.sentences,
       userWords: {
         connectOrCreate: {
           where: {

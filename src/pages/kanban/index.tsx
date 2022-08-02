@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { Spinner, Tooltip } from "@chakra-ui/react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "@emotion/styled";
+import { string } from "zod";
 
 interface TranslationDataInterface {
   data: {
@@ -29,14 +30,17 @@ type KanbanPageProps = {
   searchingWord: string;
   searchingEngine: string;
   translations: {
-    pos: string;
-    terms: {
-      name: string;
+    pos?: string;
+
+    orig?: string;
+    trans?: string;
+    terms?: {
+      name?: string;
     }[];
-    entries: {
-      word: string;
-      score: number;
-      reverse_translations: { name: string }[];
+    entries?: {
+      word?: string;
+      score?: number;
+      reverse_translations?: { name?: string }[];
     }[];
   }[];
 };
@@ -272,7 +276,9 @@ const ContentComponent: FC<{
                         <Tooltip
                           bg="#ff4154"
                           label={column.wordData.translations.map((item) =>
-                            item.terms.map((term) => term.name + "; ")
+                            item.trans
+                              ? item.trans + ";"
+                              : item.terms?.map((term) => term.name + "; ")
                           )}
                           aria-label="A tooltip"
                         >
@@ -327,7 +333,7 @@ const ContentComponent: FC<{
                           hasArrow
                           bg="#ff4154"
                           label={column.wordData.translations.map((item) =>
-                            item.terms.map((term) => term.name + "; ")
+                            item.terms?.map((term) => term.name + "; ")
                           )}
                           aria-label="A tooltip"
                         >
