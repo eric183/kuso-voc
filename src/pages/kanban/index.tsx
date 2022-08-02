@@ -1,7 +1,3 @@
-// import type { NextPage } from "next";
-// import Image from "next/image";
-// import styles from "../styles/Home.module.css";
-
 import { NextPage } from "next";
 import { trpc } from "~/utils/trpc";
 import { DefaultLayout } from "~/components/DefaultLayout";
@@ -11,7 +7,6 @@ import { motion } from "framer-motion";
 import { Spinner, Tooltip } from "@chakra-ui/react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "@emotion/styled";
-import { string } from "zod";
 
 interface TranslationDataInterface {
   data: {
@@ -23,7 +18,7 @@ interface TranslationDataInterface {
   status: "error" | "idle" | "loading" | "success";
 }
 
-type KanbanPageProps = {
+interface KanbanPageProps {
   id: string;
   createdAt: Date;
   updatedAt: Date;
@@ -43,7 +38,7 @@ type KanbanPageProps = {
       reverse_translations?: { name?: string }[];
     }[];
   }[];
-};
+}
 
 interface StateInterface {
   noob?: {
@@ -117,12 +112,6 @@ const DropLayout = styled.section<{
 
 const DropContent = styled.div``;
 
-// const getInitialData = (count: number) =>
-//   Array.from({ length: count }, (v, k) => k).map((k) => ({
-//     id: `item-${k}`,
-//     content: `item ${k}`,
-//   }));
-
 const ContentComponent: FC<{
   sessionInfo: {
     data: any;
@@ -137,7 +126,6 @@ const ContentComponent: FC<{
       email: sessionInfo.data.user.email as string,
     },
   ]) as TranslationDataInterface;
-  // console.log(data, "dddddddd");
 
   const updateMaster = trpc.useMutation(["wordCard.updateMaster"], {
     async onSuccess() {
@@ -192,8 +180,8 @@ const ContentComponent: FC<{
   useEffect(() => {
     if (status === "success") {
       setState({
-        master: data.filter((item) => item.master),
-        noob: data.filter((item) => !item.master),
+        master: data.filter((item) => item.master && item.wordData),
+        noob: data.filter((item) => !item.master && item.wordData),
       });
     }
   }, [data, status]);
