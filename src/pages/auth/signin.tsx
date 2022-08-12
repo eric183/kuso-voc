@@ -28,6 +28,8 @@ export default function SignIn({
   const router = useRouter();
   const goSignIn = async (providers: { credentials: Credentials }) => {
     setLoading(true);
+
+    console.log(providers, "providers");
     if (!email.trim()) {
       alert("Email is required");
 
