@@ -76,6 +76,8 @@ export default function SignIn({
           >
             <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
             <input
+              id="email"
+              type="email"
               autoComplete="on"
               placeholder="Please enter your email"
               size={30}
